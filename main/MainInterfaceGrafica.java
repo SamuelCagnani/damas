@@ -86,7 +86,7 @@ public final class MainInterfaceGrafica extends JFrame {
             if (tabuleiroLogico.getMatriz()[linha][col] != EstadoCasa.VAZIA && tabuleiroLogico.getMatriz()[linha][col] != EstadoCasa.INVALIDA) {
                 linhaOrigem = linha;
                 colOrigem = col;
-                tabuleiroInterface[linha][col].setBackground(Color.YELLOW); // Destaque do clique
+                tabuleiroInterface[linha][col].setBackground(new Color(246, 246, 105)); // Destaque do clique
             }
         } 
         // Caso 2: Já existe uma peça selecionada, tentando mover
