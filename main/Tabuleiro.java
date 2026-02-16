@@ -5,11 +5,11 @@ package main;
  */
 public class Tabuleiro implements Cloneable {
 
-    private int[][] matriz;
+    private EstadoCasa[][] matriz;
     private final int TAMANHO = 6;
 
     public Tabuleiro() {
-        this.matriz = new int[TAMANHO][TAMANHO];
+        this.matriz = new EstadoCasa[TAMANHO][TAMANHO];
         inicializar();
     }
 
@@ -18,12 +18,14 @@ public class Tabuleiro implements Cloneable {
             for (int j = 0; j < TAMANHO; j++) {
                 if ((i + j) % 2 != 0) {
                     if (i < 2) {
-                        matriz[i][j] = 2; // Pretas
+                        matriz[i][j] = EstadoCasa.PRETA; // Pretas
                     } else if (i > 3) {
-                        matriz[i][j] = 1; // Brancas
+                        matriz[i][j] = EstadoCasa.BRANCA; // Brancas
+                    } else {
+                        matriz[i][j] = EstadoCasa.VAZIA;
                     }
                 } else {
-                    matriz[i][j] = -2; // Casas que não podem ser usadas no jogo
+                    matriz[i][j] = EstadoCasa.INVALIDA; // Casas que não podem ser usadas no jogo
                 }
             }
         }
@@ -33,7 +35,7 @@ public class Tabuleiro implements Cloneable {
     public Tabuleiro clone() {
         try {
             Tabuleiro clone = (Tabuleiro) super.clone();
-            clone.matriz = new int[TAMANHO][];
+            clone.matriz = new EstadoCasa[TAMANHO][];
             for (int i = 0; i < TAMANHO; i++) {
                 clone.matriz[i] = this.matriz[i].clone();
             }
@@ -52,11 +54,11 @@ public class Tabuleiro implements Cloneable {
     }
     
 
-    public int[][] getMatriz() {
+    public EstadoCasa[][] getMatriz() {
         return matriz;
     }
 
-    public void setMatriz(int[][] matriz) {
+    public void setMatriz(EstadoCasa[][] matriz) {
         this.matriz = matriz;
     }
 }

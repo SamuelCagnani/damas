@@ -77,12 +77,13 @@ public final class MainInterfaceGrafica extends JFrame {
     }
 
     private void tratarClique(int linha, int col) {
-        
+
         // Caso 1: Nenhuma peça selecionada ainda
         if (linhaOrigem == -1) {
             
             // Verifica se a casa clicada contém QUALQUER peça (1, 2, 3 ou 4)
-            if (tabuleiroLogico.getMatriz()[linha][col] != 0) {
+            // Posso criar um helper no enum, tipo um isPeca() !!!
+            if (tabuleiroLogico.getMatriz()[linha][col] != EstadoCasa.VAZIA && tabuleiroLogico.getMatriz()[linha][col] != EstadoCasa.INVALIDA) {
                 linhaOrigem = linha;
                 colOrigem = col;
                 tabuleiroInterface[linha][col].setBackground(Color.YELLOW); // Destaque do clique
@@ -118,27 +119,36 @@ public final class MainInterfaceGrafica extends JFrame {
     private void cancelarSelecao() {
         if (linhaOrigem != -1 ) {
             // Restaura a cor original
-            tabuleiroInterface[linhaOrigem][colOrigem].setBackground(new Color(119, 149, 86));
+            calcularCorCasa(linhaOrigem, colOrigem);
         }
         linhaOrigem = -1;
         colOrigem = -1;
     }
 
+    // Problema de restaurar cor única resolvido
+    private void calcularCorCasa(int i, int j){
+        if((i + j) % 2 == 0) {
+            tabuleiroInterface[linhaOrigem][colOrigem].setBackground(new Color(235, 235, 208));
+        } else {
+            tabuleiroInterface[linhaOrigem][colOrigem].setBackground(new Color(119, 149, 86));
+        }
+    }
+
     private boolean moverPecaLogica(int r1, int c1, int r2, int c2) {
         
         // A casa de destino deve estar vazia
-        if (tabuleiroLogico.getMatriz()[r2][c2] == 0 && tabuleiroLogico.getMatriz()[r2][c2] != -2) {
+        if (tabuleiroLogico.getMatriz()[r2][c2] == EstadoCasa.VAZIA) {
             
             // Transfere o valor (seja 1, 2, 3 ou 4) para a nova posição
             tabuleiroLogico.getMatriz()[r2][c2] = tabuleiroLogico.getMatriz()[r1][c1];
-            tabuleiroLogico.getMatriz()[r1][c1] = 0;
+            tabuleiroLogico.getMatriz()[r1][c1] = EstadoCasa.VAZIA;
 
             // Promoção simples para Dama (opcional)
-            if (tabuleiroLogico.getMatriz()[r2][c2] == 2 && r2 == 5) {
-                tabuleiroLogico.getMatriz()[r2][c2] = 4;
+            if (tabuleiroLogico.getMatriz()[r2][c2] == EstadoCasa.PRETA && r2 == 5) {
+                tabuleiroLogico.getMatriz()[r2][c2] = EstadoCasa.DAMA_PRETA;
             }
-            if (tabuleiroLogico.getMatriz()[r2][c2] == 1 && r2 == 0) {
-                tabuleiroLogico.getMatriz()[r2][c2] = 3;
+            if (tabuleiroLogico.getMatriz()[r2][c2] == EstadoCasa.BRANCA && r2 == 0) {
+                tabuleiroLogico.getMatriz()[r2][c2] = EstadoCasa.DAMA_BRANCA;
             }
 
             return true;
@@ -157,7 +167,7 @@ public final class MainInterfaceGrafica extends JFrame {
     public void sincronizarInterface() {
         for (int i = 0; i < TAMANHO; i++) {
             for (int j = 0; j < TAMANHO; j++) {
-                int peca = tabuleiroLogico.getMatriz()[i][j];
+                EstadoCasa peca = tabuleiroLogico.getMatriz()[i][j];
                 tabuleiroInterface[i][j].setTipoPeca(peca);
             }
         }
@@ -165,9 +175,9 @@ public final class MainInterfaceGrafica extends JFrame {
 
     private class CasaBotao extends JButton {
 
-        private int tipoPeca = 0;
+        private EstadoCasa tipoPeca = EstadoCasa.VAZIA;
 
-        public void setTipoPeca(int tipo) {
+        public void setTipoPeca(EstadoCasa tipo) {
             this.tipoPeca = tipo;
             repaint();
         }
@@ -180,19 +190,19 @@ public final class MainInterfaceGrafica extends JFrame {
 
             int margem = 10;
             // Brancas
-            if (tipoPeca == 1 || tipoPeca == 3) { 
+            if (tipoPeca == EstadoCasa.BRANCA || tipoPeca == EstadoCasa.DAMA_BRANCA) {
                 g2.setColor(Color.WHITE);
                 g2.fillOval(margem, margem, getWidth() - 2 * margem, getHeight() - 2 * margem);
                 g2.setColor(Color.BLACK);
                 g2.drawOval(margem, margem, getWidth() - 2 * margem, getHeight() - 2 * margem);
             // Pretas
-            } else if (tipoPeca == 2 || tipoPeca == 4) { 
+            } else if (tipoPeca == EstadoCasa.PRETA || tipoPeca == EstadoCasa.DAMA_PRETA) {
                 g2.setColor(Color.BLACK);
                 g2.fillOval(margem, margem, getWidth() - 2 * margem, getHeight() - 2 * margem);
             }
 
             // Representação de Dama (uma borda dourada)
-            if (tipoPeca > 2) { 
+            if (tipoPeca == EstadoCasa.DAMA_BRANCA || tipoPeca == EstadoCasa.DAMA_PRETA) {
                 g2.setColor(Color.YELLOW);
                 g2.setStroke(new BasicStroke(3));
                 g2.drawOval(margem + 5, margem + 5, getWidth() - 2 * margem - 10, getHeight() - 2 * margem - 10);
