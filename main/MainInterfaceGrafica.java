@@ -128,9 +128,9 @@ public final class MainInterfaceGrafica extends JFrame {
     // Problema de restaurar cor única resolvido
     private void calcularCorCasa(int i, int j){
         if((i + j) % 2 == 0) {
-            tabuleiroInterface[linhaOrigem][colOrigem].setBackground(new Color(235, 235, 208));
+            tabuleiroInterface[i][j].setBackground(new Color(235, 235, 208));
         } else {
-            tabuleiroInterface[linhaOrigem][colOrigem].setBackground(new Color(119, 149, 86));
+            tabuleiroInterface[i][j].setBackground(new Color(119, 149, 86));
         }
     }
 
