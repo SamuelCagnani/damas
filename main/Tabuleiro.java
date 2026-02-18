@@ -48,9 +48,33 @@ public class Tabuleiro implements Cloneable {
     /*
         Implementação dos métodos - getMovimentosPossiveis(), fazerMovimento(), etc
     */
-    public boolean verificaMovimento () {
-        
-        return true;
+    public boolean movimentoValido(int l1, int c1, int l2, int c2) {
+
+        EstadoCasa origem = this.matriz[l1][c1];
+        EstadoCasa destino = this.matriz[l2][c2];
+
+        // Se a casa destino não estiver vazia
+        if (destino != EstadoCasa.VAZIA) return false;
+
+        // Se a casa de origem não possuir uma peça
+        if (!origem.isPeca()) return false;
+
+        // Validação de movimento separada para damas e peças normais
+        if (origem.isDama()) {
+            return validarMovimentoDama(l1, c1, l2, c2);
+        } else {
+            return validarMovimentoPeca(l1, c1, l2, c2);
+        }
+    }
+
+    // Método de validação de movimento das peças
+    private boolean validarMovimentoPeca(int l1, int c1, int l2, int c2) {
+        return false;
+    }
+
+    // Método de validação de movimento das damas
+    private boolean validarMovimentoDama(int l1, int c1, int l2, int c2) {
+        return false;
     }
     
 
