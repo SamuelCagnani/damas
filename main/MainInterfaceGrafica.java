@@ -10,6 +10,7 @@ public final class MainInterfaceGrafica extends JFrame {
 
     private final int TAMANHO = 6;
     private final CasaBotao[][] tabuleiroInterface = new CasaBotao[TAMANHO][TAMANHO];
+    private Jogador jogadorAtual = Jogador.BRANCO;
     
     /*
         Vazio: 0
