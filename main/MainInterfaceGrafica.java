@@ -81,10 +81,11 @@ public final class MainInterfaceGrafica extends JFrame {
 
         // Caso 1: Nenhuma peça selecionada ainda
         if (linhaOrigem == -1) {
-            
+
+            EstadoCasa estado = tabuleiroLogico.getMatriz()[linha][col];
             // Verifica se a casa clicada contém QUALQUER peça (1, 2, 3 ou 4)
             // Posso criar um helper no enum, tipo um isPeca() !!!
-            if (tabuleiroLogico.getMatriz()[linha][col] != EstadoCasa.VAZIA && tabuleiroLogico.getMatriz()[linha][col] != EstadoCasa.INVALIDA) {
+            if (estado != EstadoCasa.VAZIA && estado != EstadoCasa.INVALIDA) {
                 linhaOrigem = linha;
                 colOrigem = col;
                 tabuleiroInterface[linha][col].setBackground(new Color(246, 246, 105)); // Destaque do clique
