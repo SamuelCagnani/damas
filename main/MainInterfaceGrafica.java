@@ -82,10 +82,10 @@ public final class MainInterfaceGrafica extends JFrame {
         // Caso 1: Nenhuma peça selecionada ainda
         if (linhaOrigem == -1) {
 
-            EstadoCasa estado = tabuleiroLogico.getMatriz()[linha][col];
+
             // Verifica se a casa clicada contém QUALQUER peça (1, 2, 3 ou 4)
-            // Posso criar um helper no enum, tipo um isPeca() !!!
-            if (estado != EstadoCasa.VAZIA && estado != EstadoCasa.INVALIDA) {
+            EstadoCasa estado = tabuleiroLogico.getMatriz()[linha][col];
+            if (estado.isPeca() && estado.pertenceAo(jogadorAtual)) {
                 linhaOrigem = linha;
                 colOrigem = col;
                 tabuleiroInterface[linha][col].setBackground(new Color(246, 246, 105)); // Destaque do clique
@@ -105,6 +105,7 @@ public final class MainInterfaceGrafica extends JFrame {
             if (sucesso) {
                 cancelarSelecao();
                 sincronizarInterface();
+                alternarJogador();
 
                 /*
                     VERIFICAÇÃO DE QUEM É A VEZ DE JOGAR E IMPLEMENTAÇÃO DA JOGADA DA IA
@@ -116,6 +117,11 @@ public final class MainInterfaceGrafica extends JFrame {
                 cancelarSelecao();
             }
         }
+    }
+
+    // Método utilizado para alternar turnos sempre que  umajogada é considerada um sucesso
+    private void alternarJogador() {
+        jogadorAtual = (jogadorAtual == Jogador.BRANCO) ? Jogador.PRETO : Jogador.BRANCO;
     }
 
     private void cancelarSelecao() {
