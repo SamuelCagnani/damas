@@ -69,6 +69,24 @@ public class Tabuleiro implements Cloneable {
 
     // Método de validação de movimento das peças
     private boolean validarMovimentoPeca(int l1, int c1, int l2, int c2) {
+
+        // Mede as variações de linha e coluna
+        int deltaLinha = l1 - l2;
+        int deltaColuna = Math.abs(c1 - c2);
+
+        // Obriga a peça a se mover na diagonal, alterando a coluna de 1 em 1
+        if(deltaColuna != 1) return false;
+
+        EstadoCasa estado = matriz[l1][c1];
+
+        if(estado == EstadoCasa.BRANCA) {
+            return deltaLinha == 1;
+        }
+
+        if(estado == EstadoCasa.PRETA) {
+            return deltaLinha == -1;
+        }
+
         return false;
     }
 

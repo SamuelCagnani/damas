@@ -143,7 +143,12 @@ public final class MainInterfaceGrafica extends JFrame {
     }
 
     private boolean moverPecaLogica(int r1, int c1, int r2, int c2) {
-        
+
+        // Condicional que garante que sejam feitos somente movimentos válidos
+        if(!tabuleiroLogico.movimentoValido(r1, c1, r2, c2)) {
+            return false;
+        }
+
         // A casa de destino deve estar vazia
         if (tabuleiroLogico.getMatriz()[r2][c2] == EstadoCasa.VAZIA) {
             
