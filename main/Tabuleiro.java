@@ -92,7 +92,28 @@ public class Tabuleiro implements Cloneable {
 
     // Método de validação de movimento das damas
     private boolean validarMovimentoDama(int l1, int c1, int l2, int c2) {
-        return false;
+
+        int deltaLinha = l2 - l1;
+        int deltaColuna = c2 - c1;
+
+        // Garante que o movimento seja na diagonal
+        if(Math.abs(deltaLinha) != Math.abs(deltaColuna)) return false;
+
+        int moduloLinha = Integer.signum(deltaLinha);
+        int moduloColuna = Integer.signum(deltaColuna);
+
+        int linhaAtual = l1 + moduloLinha;
+        int colunaAtual = c1 + moduloColuna;
+
+        while(linhaAtual != l2 && colunaAtual != c2) {
+
+            if(matriz[linhaAtual][colunaAtual] != EstadoCasa.VAZIA) return false;
+
+            linhaAtual += moduloLinha;
+            colunaAtual += moduloColuna;
+        }
+
+        return true;
     }
     
 

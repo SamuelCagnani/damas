@@ -46,7 +46,7 @@ public final class MainInterfaceGrafica extends JFrame {
         */
         tabuleiroLogico = new Tabuleiro();
 
-        setTitle("DISCIPLINA - IA - MINI JOGO DE DAMA DO SAMUEL");
+        setTitle("DISCIPLINA - IA - MINI JOGO DE DAMAS DO SAMUEL");
         setSize(800, 800);
         setLayout(new GridLayout(TAMANHO, TAMANHO));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,7 +83,7 @@ public final class MainInterfaceGrafica extends JFrame {
         if (linhaOrigem == -1) {
 
 
-            // Verifica se a casa clicada contém QUALQUER peça (1, 2, 3 ou 4)
+            // Verifica se a casa clicada possui uma peça e se essa peça é da cor do jogador atual
             EstadoCasa estado = tabuleiroLogico.getMatriz()[linha][col];
             if (estado.isPeca() && estado.pertenceAo(jogadorAtual)) {
                 linhaOrigem = linha;
