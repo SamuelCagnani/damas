@@ -4,69 +4,81 @@
 
 🚧 Projeto em desenvolvimento.
 
-Este repositório contém o início da implementação de um jogo de damas em Java, com foco na modelagem correta das regras oficiais do jogo.
+Projeto em desenvolvimento ativo.
+
+Este repositório contém a implementação de um jogo de damas em Java, com foco na modelagem correta das regras oficiais e na preparação estrutural para implementação de Inteligência Artificial.
 
 ---
 
 ## Objetivo
 
-Desenvolver um jogo de damas aplicando:
+O projeto tem como principais objetivos:
 
-- Programação Orientada a Objetos
-- Modelagem de regras de jogo
-- Estruturação de lógica condicional
-- Representação de tabuleiro em matriz
+- Aplicar Programação Orientada a Objetos
+- Modelar regras formais de um jogo clássico
+- Separar lógica de jogo e interface gráfica
+- Preparar a base para implementação de IA
 
-O projeto será construído de forma incremental, priorizando primeiro a lógica do jogo e depois a interface.
+O desenvolvimento está sendo feito de forma incremental:
+
+- Implementação da lógica base
+- Interface gráfica funcional
+- Implementação completa das regras
+- Integração com Inteligência Artificial
 
 ---
 
 ## Representação do Tabuleiro
 
-O tabuleiro será representado por uma matriz de inteiros, onde:
+O tabuleiro será representado por uma matriz de char visando simplicidade e eficiência para simulação de estados futuros, onde:
 
-- `0` → Casa vazia
-- `1` → Peça branca
-- `2` → Peça preta
-- `3` → Dama branca
-- `4` → Dama preta
-- `-2` → Casas proibidas
-
----
-
-## Regras que serão implementadas
-
-- Definição do jogador que começa (peças brancas)
-- Obrigatoriedade de captura
-- Peças comuns não podem capturar para trás
-- Captura múltipla permitida
-- Damas podem:
-    - Andar múltiplas casas
-    - Capturar para trás
-    - Capturar múltiplas peças
-- A posição final da dama será determinada pela última peça capturada
-- Caso um jogador fique sem movimentos possíveis, perde a partida
+- ' '  → Casa vazia
+- 'b'  → Peça branca
+- 'p'  → Peça preta
+- 'B'  → Dama branca
+- 'P'  → Dama preta
+- '#'  → Casa inválida
 
 ---
 
-## Estrutura Atual
+## Funcionalidades Implementadas
 
 O projeto está sendo estruturado com separação entre:
 
-- Lógica do tabuleiro
-- Controle das regras
-- Interface gráfica (em desenvolvimento)
+- Inicialização automática do tabuleiro 
+- Movimentação diagonal de peças comuns 
+- Movimentação múltipla de damas 
+- Promoção automática 
+- Alternância de turnos 
+- Estrutura preparada para simulação de estados (IA)
+
+---
+
+## Regras Implementadas / Em Implementação
+
+O projeto busca respeitar as regras oficiais de damas:
+
+- Peças brancas iniciam a partida 
+- Captura obrigatória (em implementação)
+- Peças comuns não capturam para trás 
+- Captura múltipla permitida 
+- Damas:
+  - Movem múltiplas casas 
+  - Capturam para trás 
+  - Permitem múltiplas capturas 
+- Derrota quando o jogador não possui movimentos possíveis
 
 ---
 
 ## Próximos Passos
 
-- Implementar movimentação básica
-- Validar movimentos possíveis
-- Implementar sistema de captura
-- Criar controle de turnos
-- Adicionar promoção para dama
-- Implementar verificação de fim de jogo
+- Implementar sistema completo de captura 
+- Tornar captura obrigatória 
+- Permitir múltiplas capturas encadeadas 
+- Gerar lista de movimentos possíveis por jogador 
+- Implementar algoritmo Minimax 
+- Adicionar poda Alpha-Beta 
+- Implementar verificação automática de fim de jogo
 
 ---
 
