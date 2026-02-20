@@ -84,8 +84,8 @@ public final class MainInterfaceGrafica extends JFrame {
 
 
             // Verifica se a casa clicada possui uma peça e se essa peça é da cor do jogador atual
-            EstadoCasa estado = tabuleiroLogico.getMatriz()[linha][col];
-            if (estado.isPeca() && estado.pertenceAo(jogadorAtual)) {
+            char estado = tabuleiroLogico.getMatriz()[linha][col];
+            if (Peca.isPeca(estado) && Peca.pertenceAo(jogadorAtual, estado)) {
                 linhaOrigem = linha;
                 colOrigem = col;
                 tabuleiroInterface[linha][col].setBackground(new Color(246, 246, 105)); // Destaque do clique
@@ -150,18 +150,18 @@ public final class MainInterfaceGrafica extends JFrame {
         }
 
         // A casa de destino deve estar vazia
-        if (tabuleiroLogico.getMatriz()[r2][c2] == EstadoCasa.VAZIA) {
+        if (tabuleiroLogico.getMatriz()[r2][c2] == Peca.vazia) {
             
             // Transfere o valor (seja 1, 2, 3 ou 4) para a nova posição
             tabuleiroLogico.getMatriz()[r2][c2] = tabuleiroLogico.getMatriz()[r1][c1];
-            tabuleiroLogico.getMatriz()[r1][c1] = EstadoCasa.VAZIA;
+            tabuleiroLogico.getMatriz()[r1][c1] = Peca.vazia;
 
             // Promoção simples para Dama (opcional)
-            if (tabuleiroLogico.getMatriz()[r2][c2] == EstadoCasa.PRETA && r2 == 5) {
-                tabuleiroLogico.getMatriz()[r2][c2] = EstadoCasa.DAMA_PRETA;
+            if (tabuleiroLogico.getMatriz()[r2][c2] == Peca.preta && r2 == 5) {
+                tabuleiroLogico.getMatriz()[r2][c2] = Peca.dama_preta;
             }
-            if (tabuleiroLogico.getMatriz()[r2][c2] == EstadoCasa.BRANCA && r2 == 0) {
-                tabuleiroLogico.getMatriz()[r2][c2] = EstadoCasa.DAMA_BRANCA;
+            if (tabuleiroLogico.getMatriz()[r2][c2] == Peca.branca && r2 == 0) {
+                tabuleiroLogico.getMatriz()[r2][c2] = Peca.dama_branca;
             }
 
             return true;
@@ -180,7 +180,7 @@ public final class MainInterfaceGrafica extends JFrame {
     public void sincronizarInterface() {
         for (int i = 0; i < TAMANHO; i++) {
             for (int j = 0; j < TAMANHO; j++) {
-                EstadoCasa peca = tabuleiroLogico.getMatriz()[i][j];
+                char peca = tabuleiroLogico.getMatriz()[i][j];
                 tabuleiroInterface[i][j].setTipoPeca(peca);
             }
         }
@@ -188,9 +188,9 @@ public final class MainInterfaceGrafica extends JFrame {
 
     private class CasaBotao extends JButton {
 
-        private EstadoCasa tipoPeca = EstadoCasa.VAZIA;
+        private char tipoPeca = Peca.vazia;
 
-        public void setTipoPeca(EstadoCasa tipo) {
+        public void setTipoPeca(char tipo) {
             this.tipoPeca = tipo;
             repaint();
         }
@@ -203,19 +203,19 @@ public final class MainInterfaceGrafica extends JFrame {
 
             int margem = 10;
             // Brancas
-            if (tipoPeca == EstadoCasa.BRANCA || tipoPeca == EstadoCasa.DAMA_BRANCA) {
+            if (tipoPeca == Peca.branca || tipoPeca == Peca.dama_branca) {
                 g2.setColor(Color.WHITE);
                 g2.fillOval(margem, margem, getWidth() - 2 * margem, getHeight() - 2 * margem);
                 g2.setColor(Color.BLACK);
                 g2.drawOval(margem, margem, getWidth() - 2 * margem, getHeight() - 2 * margem);
             // Pretas
-            } else if (tipoPeca == EstadoCasa.PRETA || tipoPeca == EstadoCasa.DAMA_PRETA) {
+            } else if (tipoPeca == Peca.preta || tipoPeca == Peca.dama_preta) {
                 g2.setColor(Color.BLACK);
                 g2.fillOval(margem, margem, getWidth() - 2 * margem, getHeight() - 2 * margem);
             }
 
             // Representação de Dama (uma borda dourada)
-            if (tipoPeca == EstadoCasa.DAMA_BRANCA || tipoPeca == EstadoCasa.DAMA_PRETA) {
+            if (tipoPeca == Peca.dama_branca || tipoPeca == Peca.dama_preta) {
                 g2.setColor(Color.YELLOW);
                 g2.setStroke(new BasicStroke(3));
                 g2.drawOval(margem + 5, margem + 5, getWidth() - 2 * margem - 10, getHeight() - 2 * margem - 10);

@@ -5,11 +5,11 @@ package main;
  */
 public class Tabuleiro implements Cloneable {
 
-    private EstadoCasa[][] matriz;
+    private char[][] matriz;
     private final int TAMANHO = 6;
 
     public Tabuleiro() {
-        this.matriz = new EstadoCasa[TAMANHO][TAMANHO];
+        this.matriz = new char[TAMANHO][TAMANHO];
         inicializar();
     }
 
@@ -18,14 +18,14 @@ public class Tabuleiro implements Cloneable {
             for (int j = 0; j < TAMANHO; j++) {
                 if ((i + j) % 2 != 0) {
                     if (i < 2) {
-                        matriz[i][j] = EstadoCasa.PRETA; // Pretas
+                        matriz[i][j] = Peca.preta; // Pretas
                     } else if (i > 3) {
-                        matriz[i][j] = EstadoCasa.BRANCA; // Brancas
+                        matriz[i][j] = Peca.branca; // Brancas
                     } else {
-                        matriz[i][j] = EstadoCasa.VAZIA;
+                        matriz[i][j] = Peca.vazia;
                     }
                 } else {
-                    matriz[i][j] = EstadoCasa.INVALIDA; // Casas que não podem ser usadas no jogo
+                    matriz[i][j] = Peca.invalida; // Casas que não podem ser usadas no jogo
                 }
             }
         }
@@ -35,7 +35,7 @@ public class Tabuleiro implements Cloneable {
     public Tabuleiro clone() {
         try {
             Tabuleiro clone = (Tabuleiro) super.clone();
-            clone.matriz = new EstadoCasa[TAMANHO][];
+            clone.matriz = new char[TAMANHO][];
             for (int i = 0; i < TAMANHO; i++) {
                 clone.matriz[i] = this.matriz[i].clone();
             }
@@ -50,17 +50,17 @@ public class Tabuleiro implements Cloneable {
     */
     public boolean movimentoValido(int l1, int c1, int l2, int c2) {
 
-        EstadoCasa origem = this.matriz[l1][c1];
-        EstadoCasa destino = this.matriz[l2][c2];
+        char origem = this.matriz[l1][c1];
+        char destino = this.matriz[l2][c2];
 
         // Se a casa destino não estiver vazia
-        if (destino != EstadoCasa.VAZIA) return false;
+        if (destino != Peca.vazia) return false;
 
         // Se a casa de origem não possuir uma peça
-        if (!origem.isPeca()) return false;
+        if (!Peca.isPeca(origem)) return false;
 
         // Validação de movimento separada para damas e peças normais
-        if (origem.isDama()) {
+        if (Peca.isDama(origem)) {
             return validarMovimentoDama(l1, c1, l2, c2);
         } else {
             return validarMovimentoPeca(l1, c1, l2, c2);
@@ -77,13 +77,13 @@ public class Tabuleiro implements Cloneable {
         // Obriga a peça a se mover na diagonal, alterando a coluna de 1 em 1
         if(deltaColuna != 1) return false;
 
-        EstadoCasa estado = matriz[l1][c1];
+        char estado = matriz[l1][c1];
 
-        if(estado == EstadoCasa.BRANCA) {
+        if(estado == Peca.branca) {
             return deltaLinha == 1;
         }
 
-        if(estado == EstadoCasa.PRETA) {
+        if(estado == Peca.preta) {
             return deltaLinha == -1;
         }
 
@@ -107,7 +107,7 @@ public class Tabuleiro implements Cloneable {
 
         while(linhaAtual != l2 && colunaAtual != c2) {
 
-            if(matriz[linhaAtual][colunaAtual] != EstadoCasa.VAZIA) return false;
+            if(matriz[linhaAtual][colunaAtual] != Peca.vazia) return false;
 
             linhaAtual += moduloLinha;
             colunaAtual += moduloColuna;
@@ -115,13 +115,12 @@ public class Tabuleiro implements Cloneable {
 
         return true;
     }
-    
 
-    public EstadoCasa[][] getMatriz() {
+    public char[][] getMatriz() {
         return matriz;
     }
 
-    public void setMatriz(EstadoCasa[][] matriz) {
+    public void setMatriz(char[][] matriz) {
         this.matriz = matriz;
     }
 }
