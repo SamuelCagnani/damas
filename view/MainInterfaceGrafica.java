@@ -1,5 +1,7 @@
-package main;
+package view;
 
+import model.Peca;
+import engine.Jogo;
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,46 +11,23 @@ import java.awt.*;
 public final class MainInterfaceGrafica extends JFrame {
 
     private final int TAMANHO = 6;
+    private Jogo jogo;
     private final CasaBotao[][] tabuleiroInterface = new CasaBotao[TAMANHO][TAMANHO];
-    private Jogador jogadorAtual = Jogador.BRANCO;
-    
-    /*
-        -> REGRAS DO JOGO
+    private int linhaOrigem = -1, colunaOrigem = -1;
 
-            - DEFINIR QUEM UTILIZARÁ AS PEÇAS BRANCAS (COMEÇA O JOGO)
-            - OBRIGATÓRIO COMER A PEÇA
-            - NÃO É PERMITIDO COMER PRA TRÁS
-            - UMA PEÇA PODE COMER MÚLTIPLAS PEÇAS, EM QUALQUER
-            DIREÇÃO, DESDE QUE A PRIMEIRA SEJA PARA FRENTE
-            - A DAMA PODE ANDAR INFINITAS CASAS, RESPEITANDO O LIMITE DO TABULEIRO
-            - A DAMA PODE COMER PRA TRÁS
-            - A DAMA PODE COMER MÚLTIPLAS PEÇAS
-            - A ÚLTIMA PEÇA A SER COMIDA PELA DAMA 
-            INDICA A POSIÇÃO QUE A DAMA DEVERÁ PARAR
-            (POSIÇÃO SUBSEQUENTE NA DIREÇÃO DA COMIDA)
-            - NA IMPOSSIBILIDADE DE EFETUAR JOGADAS, 
-            O JOGADOR TRAVADO PERDE O JOGO
-    */
+    public MainInterfaceGrafica(Jogo jogo) {
 
-    private final Tabuleiro tabuleiroLogico; 
-    private int linhaOrigem = -1, colOrigem = -1;
-
-    public MainInterfaceGrafica() {
-        
+        this.jogo = jogo;
         /*
-            TABULEIRO DO JOGO
+            TABULEIRO DO JOGO INTERFACE
         */
-        tabuleiroLogico = new Tabuleiro();
-
         setTitle("DISCIPLINA - IA - MINI JOGO DE DAMAS DO SAMUEL");
         setSize(800, 800);
         setLayout(new GridLayout(TAMANHO, TAMANHO));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         inicializarComponentes();
-        sincronizarInterface(); 
-
-        setVisible(true);
+        sincronizarInterface();
     }
 
     private void inicializarComponentes() {
@@ -71,35 +50,32 @@ public final class MainInterfaceGrafica extends JFrame {
         }
     }
 
-    private void tratarClique(int linha, int col) {
+    private void tratarClique(int linha, int coluna) {
 
         // Caso 1: Nenhuma peça selecionada ainda
         if (linhaOrigem == -1) {
 
-
             // Verifica se a casa clicada possui uma peça e se essa peça é da cor do jogador atual
-            char estado = tabuleiroLogico.getMatriz()[linha][col];
-            if (Peca.isPeca(estado) && Peca.pertenceAo(jogadorAtual, estado)) {
+            if (jogo.verificaPossibilidadeJogada(linha, coluna)) {
                 linhaOrigem = linha;
-                colOrigem = col;
-                tabuleiroInterface[linha][col].setBackground(new Color(246, 246, 105)); // Destaque do clique
+                colunaOrigem = coluna;
+                tabuleiroInterface[linha][coluna].setBackground(new Color(246, 246, 105)); // Destaque do clique
             }
         } 
         // Caso 2: Já existe uma peça selecionada, tentando mover
         else {
             
             // Se clicar na mesma peça, cancela a seleção
-            if (linhaOrigem == linha && colOrigem == col) {
+            if (linhaOrigem == linha && colunaOrigem == coluna) {
                 cancelarSelecao();
                 return;
             }
 
-            boolean sucesso = moverPecaLogica(linhaOrigem, colOrigem, linha, col);
+            boolean sucesso = jogo.tentarMoverJogador(linhaOrigem, colunaOrigem, linha, coluna);
 
             if (sucesso) {
                 cancelarSelecao();
                 sincronizarInterface();
-                alternarJogador();
 
                 /*
                     VERIFICAÇÃO DE QUEM É A VEZ DE JOGAR E IMPLEMENTAÇÃO DA JOGADA DA IA
@@ -113,18 +89,13 @@ public final class MainInterfaceGrafica extends JFrame {
         }
     }
 
-    // Método utilizado para alternar turnos sempre que  umajogada é considerada um sucesso
-    private void alternarJogador() {
-        jogadorAtual = (jogadorAtual == Jogador.BRANCO) ? Jogador.PRETO : Jogador.BRANCO;
-    }
-
     private void cancelarSelecao() {
         if (linhaOrigem != -1 ) {
             // Restaura a cor original
-            calcularCorCasa(linhaOrigem, colOrigem);
+            calcularCorCasa(linhaOrigem, colunaOrigem);
         }
         linhaOrigem = -1;
-        colOrigem = -1;
+        colunaOrigem = -1;
     }
 
     // Problema de restaurar cor única resolvido
@@ -135,35 +106,6 @@ public final class MainInterfaceGrafica extends JFrame {
             tabuleiroInterface[i][j].setBackground(new Color(119, 149, 86));
         }
     }
-
-    private boolean moverPecaLogica(int r1, int c1, int r2, int c2) {
-
-        char origem = tabuleiroLogico.getMatriz()[r1][c1];
-        char destino = tabuleiroLogico.getMatriz()[r2][c2];
-
-        if(!Peca.isPeca(origem) || !Peca.pertenceAo(jogadorAtual, origem)) return false;
-
-        if(destino != Peca.vazia) return false;
-
-        if(!tabuleiroLogico.movimentoValido(r1, c1, r2, c2)) return false;
-
-        tabuleiroLogico.getMatriz()[r2][c2] = origem;
-        tabuleiroLogico.getMatriz()[r1][c1] = Peca.vazia;
-
-        // Promoção simples para Dama (opcional)
-        if (tabuleiroLogico.getMatriz()[r2][c2] == Peca.preta && r2 == 5) {
-            tabuleiroLogico.getMatriz()[r2][c2] = Peca.dama_preta;
-        }
-        if (tabuleiroLogico.getMatriz()[r2][c2] == Peca.branca && r2 == 0) {
-            tabuleiroLogico.getMatriz()[r2][c2] = Peca.dama_branca;
-        }
-
-        return true;
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(MainInterfaceGrafica::new);
-    }
     
     /*
      * Atualiza a interface gráfica com base na matriz lógica do Tabuleiro. Este
@@ -172,13 +114,12 @@ public final class MainInterfaceGrafica extends JFrame {
     public void sincronizarInterface() {
         for (int i = 0; i < TAMANHO; i++) {
             for (int j = 0; j < TAMANHO; j++) {
-                char peca = tabuleiroLogico.getMatriz()[i][j];
-                tabuleiroInterface[i][j].setTipoPeca(peca);
+                tabuleiroInterface[i][j].setTipoPeca(jogo.getEstadoCasa(i, j));
             }
         }
     }
 
-    private class CasaBotao extends JButton {
+    private static class CasaBotao extends JButton {
 
         private char tipoPeca = Peca.vazia;
 
@@ -208,7 +149,7 @@ public final class MainInterfaceGrafica extends JFrame {
 
             // Representação de Dama (uma borda dourada)
             if (tipoPeca == Peca.dama_branca || tipoPeca == Peca.dama_preta) {
-                g2.setColor(Color.YELLOW);
+                g2.setColor(new Color(212, 175, 55));
                 g2.setStroke(new BasicStroke(3));
                 g2.drawOval(margem + 5, margem + 5, getWidth() - 2 * margem - 10, getHeight() - 2 * margem - 10);
             }

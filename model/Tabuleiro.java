@@ -1,4 +1,4 @@
-package main;
+package model;
 
 /**
  * @author Douglas
@@ -116,11 +116,11 @@ public class Tabuleiro implements Cloneable {
         return true;
     }
 
-    public char[][] getMatriz() {
-        return matriz;
+    public char getEstadoCasa(int linha, int coluna) {
+        return matriz[linha][coluna];
     }
 
-    public void setMatriz(char[][] matriz) {
-        this.matriz = matriz;
+    public void setEstadoCasa(char estado, int linha, int coluna) {
+        matriz[linha][coluna] = estado;
     }
 }
