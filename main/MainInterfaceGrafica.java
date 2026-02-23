@@ -13,12 +13,6 @@ public final class MainInterfaceGrafica extends JFrame {
     private Jogador jogadorAtual = Jogador.BRANCO;
     
     /*
-        Vazio: 0
-        Brancas: 1
-        Pretas: 2
-        Damas: 3 (branca) ou 4 (preta)
-        Casas proibidas: -2
-    
         -> REGRAS DO JOGO
 
             - DEFINIR QUEM UTILIZARÁ AS PEÇAS BRANCAS (COMEÇA O JOGO)
@@ -144,29 +138,27 @@ public final class MainInterfaceGrafica extends JFrame {
 
     private boolean moverPecaLogica(int r1, int c1, int r2, int c2) {
 
-        // Condicional que garante que sejam feitos somente movimentos válidos
-        if(!tabuleiroLogico.movimentoValido(r1, c1, r2, c2)) {
-            return false;
+        char origem = tabuleiroLogico.getMatriz()[r1][c1];
+        char destino = tabuleiroLogico.getMatriz()[r2][c2];
+
+        if(!Peca.isPeca(origem) || !Peca.pertenceAo(jogadorAtual, origem)) return false;
+
+        if(destino != Peca.vazia) return false;
+
+        if(!tabuleiroLogico.movimentoValido(r1, c1, r2, c2)) return false;
+
+        tabuleiroLogico.getMatriz()[r2][c2] = origem;
+        tabuleiroLogico.getMatriz()[r1][c1] = Peca.vazia;
+
+        // Promoção simples para Dama (opcional)
+        if (tabuleiroLogico.getMatriz()[r2][c2] == Peca.preta && r2 == 5) {
+            tabuleiroLogico.getMatriz()[r2][c2] = Peca.dama_preta;
+        }
+        if (tabuleiroLogico.getMatriz()[r2][c2] == Peca.branca && r2 == 0) {
+            tabuleiroLogico.getMatriz()[r2][c2] = Peca.dama_branca;
         }
 
-        // A casa de destino deve estar vazia
-        if (tabuleiroLogico.getMatriz()[r2][c2] == Peca.vazia) {
-            
-            // Transfere o valor (seja 1, 2, 3 ou 4) para a nova posição
-            tabuleiroLogico.getMatriz()[r2][c2] = tabuleiroLogico.getMatriz()[r1][c1];
-            tabuleiroLogico.getMatriz()[r1][c1] = Peca.vazia;
-
-            // Promoção simples para Dama (opcional)
-            if (tabuleiroLogico.getMatriz()[r2][c2] == Peca.preta && r2 == 5) {
-                tabuleiroLogico.getMatriz()[r2][c2] = Peca.dama_preta;
-            }
-            if (tabuleiroLogico.getMatriz()[r2][c2] == Peca.branca && r2 == 0) {
-                tabuleiroLogico.getMatriz()[r2][c2] = Peca.dama_branca;
-            }
-
-            return true;
-        }
-        return false;
+        return true;
     }
 
     public static void main(String[] args) {
