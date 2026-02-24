@@ -8,14 +8,14 @@ import java.awt.*;
 /**
  * @author Douglas
  */
-public final class MainInterfaceGrafica extends JFrame {
+public final class InterfaceGrafica extends JFrame {
 
     private final int TAMANHO = 6;
     private Jogo jogo;
     private final CasaBotao[][] tabuleiroInterface = new CasaBotao[TAMANHO][TAMANHO];
     private int linhaOrigem = -1, colunaOrigem = -1;
 
-    public MainInterfaceGrafica(Jogo jogo) {
+    public InterfaceGrafica(Jogo jogo) {
 
         this.jogo = jogo;
         /*

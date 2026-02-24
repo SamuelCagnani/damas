@@ -32,4 +32,9 @@ public final class Peca {
             return estado == preta || estado == dama_preta;
         }
     }
+
+    public static boolean ehAdversario(Jogador jogador, char peca) {
+        if(!isPeca(peca)) return false;
+        return !pertenceAo(jogador, peca);
+    }
 }
