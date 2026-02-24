@@ -14,4 +14,22 @@
             (POSIÇÃO SUBSEQUENTE NA DIREÇÃO DA COMIDA)
             - NA IMPOSSIBILIDADE DE EFETUAR JOGADAS,
             O JOGADOR TRAVADO PERDE O JOGO
+
+            private boolean existeCapturaDisponivel(Jogador jogador)  não pode ser quadrático
+            armazenar a jogada tem que ser bem otimizado
+
+            posição inicial e final representadas por chars, gasto de 2 bytes
+            hash pra traduzir os chars em conrdenadas da matriz.
+
+           verificar fim de jogo, há jogado possivel? descrementar de numero de peças pra ver se as peças do jogo
+
+           heuristica de podas na árvore
+
+           a partir do momento que se tem apenas duas damas de times opostos e não é possivel comer mais peças, empate
+
+           a dama come a primeira peça andando indiscriminadamente mas a segunda segue regras de peça comum
+
+
+
+
     */
