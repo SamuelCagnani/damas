@@ -10,7 +10,6 @@ public class Jogo {
     private final Tabuleiro tabuleiroLogico;
 
     public Jogo() {
-
         tabuleiroLogico = new Tabuleiro();
     }
 
@@ -20,7 +19,7 @@ public class Jogo {
 
         return Peca.isPeca(estado) && Peca.pertenceAo(jogadorAtual, estado);
     }
-    // Método utilizado para alternar turnos sempre que  umajogada é considerada um sucesso
+    // Método utilizado para alternar turnos sempre que uma jogada é considerada um sucesso
     private void alternarJogador() {
         jogadorAtual = (jogadorAtual == Jogador.BRANCO) ? Jogador.PRETO : Jogador.BRANCO;
     }
@@ -116,19 +115,12 @@ public class Jogo {
         return false;
     }
 
-    private boolean dentroTabuleiro(int linha, int coluna){
-        return linha >= 0 && linha < 6 && coluna >= 0 && coluna < 6;
-    }
-
     private boolean isCapturaNormal(int linhaOrigem, int colunaOrigem, int linhaDestino, int colunaDestino, Jogador jogador) {
 
         int deltaLinha = linhaDestino - linhaOrigem;
         int deltaColuna = colunaDestino - colunaOrigem;
 
         if(Math.abs(deltaLinha) != 2 || Math.abs(deltaColuna) != 2) return false;
-
-        // if(jogador == Jogador.BRANCO && deltaLinha != -2) return false;
-        // if(jogador == Jogador.PRETO && deltaLinha != 2) return false;
 
         int linhaMeio = (linhaOrigem + linhaDestino) / 2;
         int colunaMeio = (colunaOrigem + colunaDestino) / 2;
@@ -150,6 +142,10 @@ public class Jogo {
         promoverSeNecessario(linhaDestino, colunaDestino);
 
         return true;
+    }
+
+    private boolean dentroTabuleiro(int linha, int coluna){
+        return linha >= 0 && linha < 6 && coluna >= 0 && coluna < 6;
     }
 
     private void promoverSeNecessario(int linha, int coluna) {
