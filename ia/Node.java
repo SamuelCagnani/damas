@@ -7,7 +7,7 @@ public class Node {
     private char origem;
     private char destino;
     private boolean vez; // 0 - preto e 1 - branco
-    private char matriz[][];
+    private char[][] matriz;
     private ArrayList<Node> filhos;
 
 }
