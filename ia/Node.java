@@ -1,17 +1,30 @@
 package ia;
 
+import model.Jogador;
+import model.Tabuleiro;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Node {
 
-    // k = 10;
+    private Tabuleiro tabuleiro;
+    private Jogador jogador;
+    private List<Node> filhos;
+    private double valor;
+    private Node melhorFilho;
 
-    private char origem;
-    private char destino;
-    private boolean vez; // 0 - preto e 1 - branco
-    private char[][] matriz;
-    private ArrayList<Node> filhos;
+    public Node(Tabuleiro tabuleiro, Jogador jogador) {
+        this.tabuleiro = tabuleiro;
+        this.jogador = jogador;
+        this.filhos = new ArrayList<>();
+        this.valor = 0;
+    }
 
-
-
+    public Tabuleiro getTabuleiro() { return tabuleiro; }
+    public Jogador getJogador() { return jogador; }
+    public List<Node> getFilhos() { return filhos; }
+    public double getValor() { return valor; }
+    public void setValor(double valor) { this.valor = valor; }
+    public Node getMelhorFilho() { return melhorFilho; }
+    public void setMelhorFilho(Node melhorFilho) { this.melhorFilho = melhorFilho; }
 }

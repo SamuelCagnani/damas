@@ -3,6 +3,8 @@ package engine;
 import model.Tabuleiro;
 import model.Peca;
 import model.Jogador;
+import ia.Node;
+import ia.Minimax;
 
 public class Jogo {
 
@@ -299,5 +301,19 @@ public class Jogo {
     private void promoverSeNecessario(int linha, int coluna) {
         if(jogadorAtual == Jogador.BRANCO && linha == 0) tabuleiroLogico.setEstadoCasa(Peca.dama_branca, linha, coluna);
         else if(jogadorAtual == Jogador.PRETO && linha == 5) tabuleiroLogico.setEstadoCasa(Peca.dama_preta, linha, coluna);
+    }
+
+    public void executarJogadaIA(int profundidade) {
+        Tabuleiro clone = tabuleiroLogico.clone();
+        Node raiz = new Node(clone, jogadorAtual);
+        
+        Minimax minimax = new Minimax(jogadorAtual);
+        minimax.executar(raiz, profundidade);
+        
+        Node melhorFilho = raiz.getMelhorFilho();
+        if (melhorFilho != null) {
+            tabuleiroLogico.copiarEstado(melhorFilho.getTabuleiro());
+            alternarJogador();
+        }
     }
 }
