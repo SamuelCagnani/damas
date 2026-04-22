@@ -1,39 +1,103 @@
-/*
+TRABALHO PRÁTICO 1 – JOGO DE DAMAS COM MINIMAX
+Disciplina: Inteligência Artificial
+Instituição: IFSULDEMINAS – Campus Poços de Caldas
 
-        -> REGRAS DO JOGO
+OBJETIVO GERAL
+Desenvolver um jogo de damas funcional utilizando algoritmos de busca em árvores, especificamente o algoritmo MiniMax, permitindo que um jogador humano enfrente uma máquina que toma decisões de forma inteligente.
 
-            - DEFINIR QUEM UTILIZARÁ AS PEÇAS BRANCAS (COMEÇA O JOGO)
-            - OBRIGATÓRIO COMER A PEÇA
-            - NÃO É PERMITIDO COMER PRA TRÁS
-            - UMA PEÇA PODE COMER MÚLTIPLAS PEÇAS, EM QUALQUER
-            DIREÇÃO, DESDE QUE A PRIMEIRA SEJA PARA FRENTE
-            - A DAMA PODE ANDAR INFINITAS CASAS, RESPEITANDO O LIMITE DO TABULEIRO
-            - A DAMA PODE COMER PRA TRÁS
-            - A DAMA PODE COMER MÚLTIPLAS PEÇAS
-            - A ÚLTIMA PEÇA A SER COMIDA PELA DAMA
-            INDICA A POSIÇÃO QUE A DAMA DEVERÁ PARAR
-            (POSIÇÃO SUBSEQUENTE NA DIREÇÃO DA COMIDA)
-            - NA IMPOSSIBILIDADE DE EFETUAR JOGADAS,
-            O JOGADOR TRAVADO PERDE O JOGO
+DESCRIÇÃO DO PROJETO
+O sistema consiste em um jogo de damas em um tabuleiro reduzido de 6x6. O jogo será disputado entre dois agentes:
 
-            private boolean existeCapturaDisponivel(Jogador jogador)  não pode ser quadrático
-            armazenar a jogada tem que ser bem otimizado
+* Jogador humano (Min)
+* Máquina (Max), controlada por algoritmo de Inteligência Artificial
 
-            posição inicial e final representadas por chars, gasto de 2 bytes
-            hash pra traduzir os chars em conrdenadas da matriz.
+A máquina deverá tomar decisões com base no algoritmo MiniMax, explorando possíveis jogadas futuras e escolhendo a melhor alternativa com base em uma função de avaliação.
 
-           verificar fim de jogo, há jogado possivel? descrementar de numero de peças pra ver se as peças do jogo
+A lógica do jogo deve ser completamente implementada pelo desenvolvedor, utilizando um código base fornecido. A interface gráfica existente deve ser mantida, podendo apenas sofrer ajustes mínimos se necessário.
 
-           heuristica de podas na árvore
+REGRAS DO JOGO (REQUISITOS FUNCIONAIS)
 
-           a partir do momento que se tem apenas duas damas de times opostos e não é possivel comer mais peças, empate
+1. O usuário pode escolher quem joga com as peças brancas (quem inicia a partida).
+2. Capturas são obrigatórias e deve-se sempre realizar a captura que elimina o maior número possível de peças em uma única jogada.
+3. Peças comuns não podem iniciar capturas para trás.
+4. Damas podem se mover e capturar em qualquer direção.
+5. O movimento da dama é livre nas diagonais (pode percorrer múltiplas casas).
+6. A posição final após uma captura deve ser imediatamente após a última peça capturada, na mesma direção do movimento.
+7. Caso um jogador não tenha movimentos possíveis, ele perde a partida.
+8. Caso sobrem apenas duas damas e não seja possível realizar captura na jogada seguinte, o jogo termina em empate.
 
-           a dama come a primeira peça andando indiscriminadamente mas a segunda segue regras de peça comum
+INTELIGÊNCIA ARTIFICIAL – MINIMAX
 
-           IA
-            - Representação
-            - Busca
+O algoritmo MiniMax será utilizado para decidir as jogadas da máquina. Ele deve:
 
-           Classe enária, um nó tem um array de nós
+* Gerar uma árvore de possibilidades de jogadas
+* Avaliar estados futuros do jogo
+* Escolher a melhor jogada considerando que o oponente também joga de forma ótima
 
-*/
+Definições importantes:
+
+* Máquina = Max (maximiza o resultado)
+* Jogador = Min (minimiza o resultado)
+
+FUNÇÃO DE AVALIAÇÃO PADRÃO
+A função de avaliação dos estados finais deve seguir:
++1 → vitória da máquina (Max)
+-1 → vitória do jogador (Min)
+0 → empate
+
+ÁRVORE DE BUSCA
+
+* Deve ser utilizada obrigatoriamente a classe Node fornecida no código base
+* A profundidade mínima da árvore deve ser de 10 níveis
+* Caso não seja possível determinar o resultado final na profundidade limite, deve-se utilizar heurística para estimar o estado do jogo
+
+REEXECUÇÃO DO MINIMAX
+
+Quando o limite de profundidade for atingido:
+
+* O algoritmo deve ser reiniciado a partir do estado atual do jogo
+* Esse processo deve continuar até o fim da partida
+
+CONFIGURAÇÃO DE DIFICULDADE
+
+O usuário deve poder definir a profundidade máxima da busca (nível de inteligência da IA):
+
+* Valores de 1 a 9
+* Quanto maior o valor, mais inteligente a IA
+* Após atingir o limite definido, jogadas podem ser escolhidas de forma aleatória
+
+HEURÍSTICA PERSONALIZADA
+
+Além da função padrão, deve-se implementar uma heurística adicional para avaliar estados intermediários, por exemplo:
+
+* Quantidade de peças de cada jogador
+* Quantidade de damas
+* Posição estratégica no tabuleiro
+* Possibilidades de captura
+
+Essa heurística será usada quando o algoritmo não atingir estados finais na profundidade definida.
+
+REGRAS DE IMPLEMENTAÇÃO
+
+* O trabalho é individual
+* Qualquer evidência de cópia resultará em nota zero
+* A interface gráfica base deve ser mantida
+* O foco principal é a lógica do jogo e a implementação do MiniMax
+
+ENTREGA
+
+* O projeto deve ser entregue via Google Classroom
+* Data limite: 23 de abril de 2026
+
+OBJETIVO FINAL
+
+Criar um sistema completo que:
+
+* Permita jogar damas contra uma IA
+* Utilize MiniMax corretamente
+* Implemente regras oficiais adaptadas
+* Seja capaz de tomar decisões inteligentes com base em análise de estados futuros
+
+OBSERVAÇÃO
+
+Este arquivo (instrucoes.txt) deve ser utilizado como base descritiva para implementação do projeto, podendo ser interpretado por ferramentas de linha de comando (CLI) e sistemas baseados em IA para auxiliar no desenvolvimento automatizado ou assistido.
