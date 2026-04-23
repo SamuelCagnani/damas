@@ -1,10 +1,10 @@
 package engine;
 
-import model.Tabuleiro;
-import model.Peca;
-import model.Jogador;
-import ia.Node;
 import ia.Minimax;
+import ia.Node;
+import model.Jogador;
+import model.Peca;
+import model.Tabuleiro;
 
 public class Jogo {
 
@@ -12,6 +12,8 @@ public class Jogo {
     private final Tabuleiro tabuleiroLogico;
     private int pecasBrancas;
     private int pecasPretas;
+    private boolean contraIA = false;
+    private Jogador jogadorHumano = null;
 
     public Jogo() {
         tabuleiroLogico = new Tabuleiro();
@@ -315,5 +317,14 @@ public class Jogo {
             tabuleiroLogico.copiarEstado(melhorFilho.getTabuleiro());
             alternarJogador();
         }
+    }
+
+    public void configurarModo(boolean contraIA, Jogador jogadorHumano) {
+        this.contraIA = contraIA;
+        this.jogadorHumano = jogadorHumano;
+    }
+
+    public boolean isTurnoIA() {
+        return contraIA && jogadorAtual != jogadorHumano;
     }
 }

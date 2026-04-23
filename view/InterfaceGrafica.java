@@ -1,6 +1,7 @@
 package view;
 
 import model.Peca;
+import model.Jogador;
 import engine.Jogo;
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,20 @@ public final class InterfaceGrafica extends JFrame {
     public InterfaceGrafica(Jogo jogo) {
 
         this.jogo = jogo;
+
+        String[] opcoes = {"Jogador vs Jogador", "Jogador vs IA"};
+        int escolha = JOptionPane.showOptionDialog(null, "Escolha o modo de jogo:", "Modo de Jogo",
+            JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+
+        if (escolha == 1) {
+            String[] cores = {"BRANCO", "PRETO"};
+            int cor = JOptionPane.showOptionDialog(null, "Escolha sua cor:", "Cor do Jogador",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, cores, cores[0]);
+
+            Jogador jogadorHumano = (cor == 0) ? Jogador.BRANCO : Jogador.PRETO;
+            jogo.configurarModo(true, jogadorHumano);
+        }
+
         /*
             TABULEIRO DO JOGO INTERFACE
         */
@@ -28,6 +43,13 @@ public final class InterfaceGrafica extends JFrame {
 
         inicializarComponentes();
         sincronizarInterface();
+
+        if (jogo.isTurnoIA()) {
+            SwingUtilities.invokeLater(() -> {
+                jogo.executarJogadaIA(3);
+                sincronizarInterface();
+            });
+        }
     }
 
     private void inicializarComponentes() {
@@ -80,7 +102,12 @@ public final class InterfaceGrafica extends JFrame {
                 /*
                     VERIFICAÇÃO DE QUEM É A VEZ DE JOGAR E IMPLEMENTAÇÃO DA JOGADA DA IA
                 */
-                
+                if (jogo.isTurnoIA()) {
+                    SwingUtilities.invokeLater(() -> {
+                        jogo.executarJogadaIA(3);
+                        sincronizarInterface();
+                    });
+                }
                 
             } else {
                 // Se o movimento for inválido (ex: clicar em cima de outra peça)
