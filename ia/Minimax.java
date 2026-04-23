@@ -8,70 +8,102 @@ import java.util.List;
 
 public class Minimax {
 
+    private static final int TAMANHO = 6;
     private final Jogador maquina;
 
     public Minimax(Jogador maquina) {
         this.maquina = maquina;
     }
 
-    public Node executar(Node no, int profundidade) {
-        List<Tabuleiro> proximos = no.getTabuleiro().gerarProximosEstados(no.getJogador());
+    /**
+     * Executa o Minimax com poda Alpha-Beta e retorna o melhor tabuleiro resultante.
+     */
+    public Tabuleiro executar(Tabuleiro tabuleiro, int profundidade) {
+        List<Tabuleiro> proximos = tabuleiro.gerarProximosEstados(maquina);
+        if (proximos.isEmpty()) return null;
 
-        if (proximos.isEmpty()) {
-            no.setValor(avaliarFinal(no.getJogador()));
-            no.setMelhorFilho(null);
-            return no;
-        }
+        double melhor = Double.NEGATIVE_INFINITY;
+        Tabuleiro melhorEstado = proximos.get(0);
 
-        if (profundidade == 0) {
-            no.setValor(heuristica(no.getTabuleiro()));
-            return no;
-        }
-
-        Jogador proximo = no.getJogador() == Jogador.BRANCO ? Jogador.PRETO : Jogador.BRANCO;
-        boolean isMax = no.getJogador() == maquina;
-        double melhor = isMax ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
-        Node melhorFilho = null;
-
-        for (Tabuleiro tab : proximos) {
-            Node filho = new Node(tab, proximo);
-            executar(filho, profundidade - 1);
-            no.getFilhos().add(filho);
-
-            if (isMax) {
-                if (filho.getValor() > melhor) { melhor = filho.getValor(); melhorFilho = filho; }
-            } else {
-                if (filho.getValor() < melhor) { melhor = filho.getValor(); melhorFilho = filho; }
+        for (Tabuleiro filho : proximos) {
+            double valor = alphaBeta(filho, profundidade - 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, false);
+            if (valor > melhor) {
+                melhor = valor;
+                melhorEstado = filho;
             }
         }
-
-        no.setValor(melhor);
-        no.setMelhorFilho(melhorFilho);
-        return no;
+        return melhorEstado;
     }
 
-    private double avaliarFinal(Jogador jogadorSemMovimento) {
-        // Quem não tem movimentos perde
-        if (jogadorSemMovimento == maquina) return -1;
-        return 1;
+    private double alphaBeta(Tabuleiro tab, int profundidade, double alpha, double beta, boolean isMax) {
+        Jogador jogadorAtual = isMax ? maquina : adversario();
+        List<Tabuleiro> proximos = tab.gerarProximosEstados(jogadorAtual);
+
+        if (profundidade == 0 || proximos.isEmpty()) {
+            return heuristica(tab, proximos.isEmpty(), jogadorAtual);
+        }
+
+        if (isMax) {
+            double valor = Double.NEGATIVE_INFINITY;
+            for (Tabuleiro filho : proximos) {
+                valor = Math.max(valor, alphaBeta(filho, profundidade - 1, alpha, beta, false));
+                alpha = Math.max(alpha, valor);
+                if (beta <= alpha) break; // poda beta
+            }
+            return valor;
+        } else {
+            double valor = Double.POSITIVE_INFINITY;
+            for (Tabuleiro filho : proximos) {
+                valor = Math.min(valor, alphaBeta(filho, profundidade - 1, alpha, beta, true));
+                beta = Math.min(beta, valor);
+                if (beta <= alpha) break; // poda alpha
+            }
+            return valor;
+        }
     }
 
-    // Pontuação máxima estimada: 6 damas × 3 pontos cada = 18
-    private static final double SCORE_MAX = 18.0;
+    private double heuristica(Tabuleiro tab, boolean semMovimentos, Jogador jogadorSemMovimento) {
+        if (semMovimentos) {
+            // Quem não tem movimentos perde
+            return jogadorSemMovimento == maquina ? -1000 : 1000;
+        }
 
-    private double heuristica(Tabuleiro tabuleiro) {
         int score = 0;
-        int tamanho = 6;
-        for (int l = 0; l < tamanho; l++) {
-            for (int c = 0; c < tamanho; c++) {
-                char casa = tabuleiro.getEstadoCasa(l, c);
+        for (int l = 0; l < TAMANHO; l++) {
+            for (int c = 0; c < TAMANHO; c++) {
+                char casa = tab.getEstadoCasa(l, c);
+                if (!Peca.isPeca(casa)) continue;
+
+                int valor = pecaValor(casa, l);
                 if (Peca.pertenceAo(maquina, casa)) {
-                    score += Peca.isDama(casa) ? 3 : 1;
-                } else if (Peca.isPeca(casa)) {
-                    score -= Peca.isDama(casa) ? 3 : 1;
+                    score += valor;
+                } else {
+                    score -= valor;
                 }
             }
         }
-        return score / SCORE_MAX;
+        return score;
+    }
+
+    /**
+     * Valor de uma peça considerando tipo e posição no tabuleiro.
+     * Dama vale 5, peça comum vale 1 + bônus de avanço (0 a 2).
+     */
+    private int pecaValor(char peca, int linha) {
+        if (Peca.isDama(peca)) return 5;
+
+        // Bônus de avanço: peças mais próximas de promover valem mais
+        int avanco;
+        if (Peca.isBranca(peca)) {
+            avanco = TAMANHO - 1 - linha; // brancas avançam para linha 0
+        } else {
+            avanco = linha; // pretas avançam para linha 5
+        }
+        // avanco varia de 0 a 5; normaliza para 0-2
+        return 1 + (avanco * 2 / (TAMANHO - 1));
+    }
+
+    private Jogador adversario() {
+        return maquina == Jogador.BRANCO ? Jogador.PRETO : Jogador.BRANCO;
     }
 }

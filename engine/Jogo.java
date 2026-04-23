@@ -1,7 +1,6 @@
 package engine;
 
 import ia.Minimax;
-import ia.Node;
 import model.Jogador;
 import model.Peca;
 import model.Tabuleiro;
@@ -306,16 +305,37 @@ public class Jogo {
     }
 
     public void executarJogadaIA(int profundidade) {
-        Tabuleiro clone = tabuleiroLogico.clone();
-        Node raiz = new Node(clone, jogadorAtual);
-        
         Minimax minimax = new Minimax(jogadorAtual);
-        minimax.executar(raiz, profundidade);
-        
-        Node melhorFilho = raiz.getMelhorFilho();
-        if (melhorFilho != null) {
-            tabuleiroLogico.copiarEstado(melhorFilho.getTabuleiro());
+        Tabuleiro resultado = minimax.executar(tabuleiroLogico.clone(), profundidade);
+
+        if (resultado != null) {
+            aplicarPromocaoIA(resultado);
+            tabuleiroLogico.copiarEstado(resultado);
+            recalcularContadores();
             alternarJogador();
+        }
+    }
+
+    /** Aplica promoção a dama em todas as peças do tabuleiro resultante da IA. */
+    private void aplicarPromocaoIA(Tabuleiro tab) {
+        for (int c = 0; c < 6; c++) {
+            if (tab.getEstadoCasa(0, c) == Peca.branca)
+                tab.setEstadoCasa(Peca.dama_branca, 0, c);
+            if (tab.getEstadoCasa(5, c) == Peca.preta)
+                tab.setEstadoCasa(Peca.dama_preta, 5, c);
+        }
+    }
+
+    /** Reconta peças brancas e pretas a partir do tabuleiro lógico atual. */
+    private void recalcularContadores() {
+        pecasBrancas = 0;
+        pecasPretas = 0;
+        for (int l = 0; l < 6; l++) {
+            for (int c = 0; c < 6; c++) {
+                char casa = tabuleiroLogico.getEstadoCasa(l, c);
+                if (Peca.isBranca(casa)) pecasBrancas++;
+                else if (Peca.isPeca(casa)) pecasPretas++;
+            }
         }
     }
 
